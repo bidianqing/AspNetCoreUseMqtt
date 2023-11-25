@@ -44,6 +44,16 @@ namespace ConsoleServer
                             await Console.Out.WriteLineAsync(e.Packet.GetRfcName());
                             var publishPacket = e.Packet as MqttPublishPacket;
                             await Console.Out.WriteLineAsync(Encoding.UTF8.GetString(publishPacket.PayloadSegment));
+
+                            await mqttServer.InjectApplicationMessage(new InjectedMqttApplicationMessage(new MqttApplicationMessage
+                            {
+                                Topic = "samples/temperature/living_room",
+                                QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce,
+                                PayloadSegment = publishPacket.PayloadSegment
+                            })
+                            {
+                                
+                            });
                             break;
 
                         default:
